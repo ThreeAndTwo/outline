@@ -1,7 +1,7 @@
 // @flow
 import invariant from "invariant";
 import { client } from "./ApiClient";
-import AliOSS from "ali-oss";
+// import AliOSS from "ali-oss";
 
 type Options = {
   name?: string,
