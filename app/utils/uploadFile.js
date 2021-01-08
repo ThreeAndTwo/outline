@@ -1,12 +1,21 @@
 // @flow
 import invariant from "invariant";
 import { client } from "./ApiClient";
+import AliOSS from "ali-oss";
 
 type Options = {
   name?: string,
   documentId?: string,
   public?: boolean,
 };
+
+// ali oss
+const ossClient = new AliOSS({
+  bucket: 'ali-bucket',
+  region: 'ali-region',
+  accessKeyId: 'ali-access-id',
+  accessKeySecret: 'ali-access-secret',
+});
 
 export const uploadFile = async (
   file: File | Blob,
@@ -20,7 +29,6 @@ export const uploadFile = async (
     size: file.size,
     name,
   });
-
   invariant(response, "Response should be available");
 
   const data = response.data;
@@ -39,10 +47,20 @@ export const uploadFile = async (
     formData.append("file", file);
   }
 
-  await fetch(data.uploadUrl, {
-    method: "post",
-    body: formData,
-  });
+  let bucketDir = "wiki" + data.form.key;
+  console.log("bucketDir: ", bucketDir);
+
+  try {
+    let uploadRes = await ossClient.put(bucketDir, file);
+    console.log(uploadRes.url);
+  } catch (e) {
+    console.log(e);
+  }
+
+  // await fetch(data.uploadUrl, {
+  //   method: "post",
+  //   body: formData,
+  // });
 
   return attachment;
 };

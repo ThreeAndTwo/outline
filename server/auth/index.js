@@ -1,6 +1,7 @@
 // @flow
 import addMonths from "date-fns/add_months";
 import Koa from "koa";
+import Cors from "koa-cors";
 import bodyParser from "koa-body";
 import Router from "koa-router";
 import { AuthenticationError } from "../errors";
@@ -13,6 +14,7 @@ import google from "./google";
 import slack from "./slack";
 
 const app = new Koa();
+app.use(Cors());
 const router = new Router();
 
 router.use("/", slack.routes());

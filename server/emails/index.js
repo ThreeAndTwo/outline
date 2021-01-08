@@ -1,10 +1,13 @@
 // @flow
 import Koa from "koa";
+import Cors from "koa-cors";
 import Router from "koa-router";
 import { NotFoundError } from "../errors";
 import { Mailer } from "../mailer";
 
 const emailPreviews = new Koa();
+emailPreviews.use(Cors());
+
 const router = new Router();
 
 router.get("/:type/:format", async (ctx) => {

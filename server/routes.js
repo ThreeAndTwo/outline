@@ -4,6 +4,7 @@ import path from "path";
 import util from "util";
 import Koa from "koa";
 import Router from "koa-router";
+import Cors from "koa-cors";
 import sendfile from "koa-sendfile";
 import serve from "koa-static";
 import { languages } from "../shared/i18n";
@@ -16,6 +17,8 @@ const isProduction = process.env.NODE_ENV === "production";
 const koa = new Koa();
 const router = new Router();
 const readFile = util.promisify(fs.readFile);
+
+koa.use(Cors());
 
 const readIndexFile = async (ctx) => {
   if (isProduction) {

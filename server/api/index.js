@@ -1,5 +1,6 @@
 // @flow
 import Koa from "koa";
+import Cors from "koa-cors";
 import bodyParser from "koa-body";
 import Router from "koa-router";
 
@@ -30,6 +31,7 @@ import views from "./views";
 const api = new Koa();
 const router = new Router();
 
+api.use(Cors());
 // middlewares
 api.use(errorHandling());
 api.use(

@@ -1,6 +1,7 @@
 // @flow
 import * as Sentry from "@sentry/node";
 import Koa from "koa";
+import Cors from "koa-cors";
 import compress from "koa-compress";
 import helmet, {
   contentSecurityPolicy,
@@ -21,6 +22,7 @@ const app = new Koa();
 const isProduction = process.env.NODE_ENV === "production";
 const isTest = process.env.NODE_ENV === "test";
 
+app.use(Cors());
 app.use(compress());
 
 if (isProduction) {
