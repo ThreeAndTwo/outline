@@ -33,6 +33,7 @@ export const initI18n = () => {
 
 export const languageOptions = [
   { label: "English (US)", value: "en_US" },
+  { label: "简体中文 (Chinese)", value: "zh_CN" },
   { label: "Deutsch (Deutschland)", value: "de_DE" },
   { label: "Español (España)", value: "es_ES" },
   { label: "Français (France)", value: "fr_FR" },

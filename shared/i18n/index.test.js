@@ -3,6 +3,7 @@ import i18n from "i18next";
 import de_DE from "./locales/de_DE/translation.json";
 import en_US from "./locales/en_US/translation.json";
 import pt_PT from "./locales/pt_PT/translation.json";
+import zh_CN from "./locales/zh_CN/translation.json";
 import { initI18n } from ".";
 
 describe("i18n process.env is unset", () => {
@@ -10,6 +11,7 @@ describe("i18n process.env is unset", () => {
     delete process.env.DEFAULT_LANGUAGE;
     initI18n()
       .addResources("en_US", "translation", en_US)
+      .addResources("zh_CN", "translation", zh_CN)
       .addResources("de_DE", "translation", de_DE)
       .addResources("pt_PT", "translation", pt_PT);
   });
