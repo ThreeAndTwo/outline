@@ -43,7 +43,7 @@ router.post("ldap", async (ctx) => {
     }
 
     const user = await User.findOne({
-        where: {name: username},
+        where: {username: username},
     });
 
     if (user) {
@@ -105,7 +105,7 @@ router.get("ldap.callback", auth({required: false}), async (ctx) => {
 
     try {
         const [user, isFirstSignin] = await User.findOrCreate({
-            where: {name: ldapId},
+            where: {username: ldapId},
             defaults: {
                 id: userPrimary,
                 email: email,
