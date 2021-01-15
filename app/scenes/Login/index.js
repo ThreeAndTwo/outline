@@ -26,21 +26,28 @@ type Props = {
 
 type State = {
   emailLinkSentTo: string,
+  ldapAccount: string,
 };
 
 @observer
 class Login extends React.Component<Props, State> {
   state = {
     emailLinkSentTo: "",
+    ldapAccount: "",
   };
 
   handleReset = () => {
     this.setState({ emailLinkSentTo: "" });
+    this.setState({ ldapAccount: "" });
   };
 
   handleEmailSuccess = (email) => {
     this.setState({ emailLinkSentTo: email });
   };
+
+  handleLdapSuccess = (ldapId) => {
+    this.setState({ldapAccount: ldapId});
+  }
 
   render() {
     const { auth, location } = this.props;
@@ -57,7 +64,8 @@ class Login extends React.Component<Props, State> {
     }
 
     const hasMultipleServices = config.services.length > 1;
-    const defaultService = find(
+
+    let defaultService = find(
       config.services,
       (service) => service.id === auth.lastSignedIn && !isCreate
     );
@@ -82,7 +90,7 @@ class Login extends React.Component<Props, State> {
             <PageTitle title="Check your email" />
             <CheckEmailIcon size={38} color="currentColor" />
 
-            <Heading centered>Check your email</Heading>
+            <Heading centered>Check your LDAP ID</Heading>
             <Note>
               A magic sign-in link has been sent to the email{" "}
               <em>{this.state.emailLinkSentTo}</em>, no password needed.
@@ -93,6 +101,28 @@ class Login extends React.Component<Props, State> {
             </ButtonLarge>
           </Centered>
         </Background>
+      );
+    }
+
+    if (this.state.ldapAccount) {
+      return (
+          <Background>
+            {header}
+            <Centered align="center" justify="center" column auto>
+              <PageTitle title="Check your LDAP ID" />
+              <CheckEmailIcon size={38} color="currentColor" />
+
+              <Heading centered>Check your LDAP ID</Heading>
+              <Note>
+                A magic sign-in link has been sent to the account{" "}
+                <em>{this.state.ldapAccount}</em>.
+              </Note>
+              <br />
+              <ButtonLarge onClick={this.handleReset} fullwidth neutral>
+                Back to login
+              </ButtonLarge>
+            </Centered>
+          </Background>
       );
     }
 
@@ -134,17 +164,16 @@ class Login extends React.Component<Props, State> {
               )}
             </React.Fragment>
           )}
-
           {config.services.map((service) => {
             if (defaultService && service.id === defaultService.id) {
               return null;
             }
-
+            console.log("service.id:", service.id)
             return (
               <Service
                 key={service.id}
                 isCreate={isCreate}
-                onEmailSuccess={this.handleEmailSuccess}
+                onLdapSuccess={this.handleLdapSuccess}
                 {...service}
               />
             );

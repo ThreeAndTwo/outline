@@ -51,6 +51,11 @@ export default function Notices({ notice }: Props) {
           please contact a team admin.
         </NoticeAlert>
       )}
+      {notice === "ldap_validation" && (
+          <NoticeAlert>
+            LDAP 服务验证失败，请重新尝试.
+          </NoticeAlert>
+      )}
     </>
   );
 }

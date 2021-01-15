@@ -26,7 +26,7 @@ router.post("attachments.create", auth(), async (ctx) => {
   ctx.assertPresent(size, "size is required");
 
   const { user } = ctx.state;
-  const s3Key = uuid.v4();
+  // const s3Key = uuid.v4();
   const acl =
     ctx.body.public === undefined
       ? AWS_S3_ACL
@@ -34,13 +34,19 @@ router.post("attachments.create", auth(), async (ctx) => {
       ? "public-read"
       : "private";
 
-  const bucket = acl === "public-read" ? "public" : "uploads";
-  const key = `${bucket}/${user.id}/${s3Key}/${name}`;
+  // const bucket = acl === "public-read" ? "public" : "uploads";
+  const bucket = "";
+
+  // const key = `${bucket}/${user.id}/${s3Key}/${name}`;
+  const key = `${bucket}/${user.id}/${name}`;
+
   const credential = makeCredential();
   const longDate = format(new Date(), "YYYYMMDDTHHmmss\\Z");
   const policy = makePolicy(credential, longDate, acl);
   const endpoint = publicS3Endpoint();
-  const url = `${endpoint}/${key}`;
+  // const url = `${endpoint}/${key}`;
+  const url = `${endpoint}${key}`;
+  console.log("bucketUrl:", url);
 
   if (documentId) {
     const document = await Document.findByPk(documentId, { userId: user.id });
@@ -76,10 +82,10 @@ router.post("attachments.create", auth(), async (ctx) => {
         acl,
         key,
         policy,
-        "x-amz-algorithm": "AWS4-HMAC-SHA256",
-        "x-amz-credential": credential,
-        "x-amz-date": longDate,
-        "x-amz-signature": getSignature(policy),
+        // "x-amz-algorithm": "AWS4-HMAC-SHA256",
+        // "x-amz-credential": credential,
+        // "x-amz-date": longDate,
+        // "x-amz-signature": getSignature(policy),
       },
       attachment: {
         documentId,

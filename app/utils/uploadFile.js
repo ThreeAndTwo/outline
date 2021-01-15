@@ -11,10 +11,10 @@ type Options = {
 
 // ali oss
 const ossClient = new AliOSS({
-  bucket: 'ali-bucket',
-  region: 'ali-region',
-  accessKeyId: 'ali-access-id',
-  accessKeySecret: 'ali-access-secret',
+  bucket: env.ALIS_BUCKET,
+  region: env.ALIS_REGION,
+  accessKeyId: env.ALIS_ACCESS_KEY_ID,
+  accessKeySecret: env.ALIS_SECRET_ACCESS_KEY,
 });
 
 export const uploadFile = async (

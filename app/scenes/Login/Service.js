@@ -14,12 +14,16 @@ type Props = {
   authUrl: string,
   isCreate: boolean,
   onEmailSuccess: (email: string) => void,
+  onLdapSuccess: (username: string) => void,
 };
 
 type State = {
   showEmailSignin: boolean,
   isSubmitting: boolean,
   email: string,
+  ldapId: string,
+  ldapPassword: string,
+  showLdapSignin: boolean,
 };
 
 class Service extends React.Component<Props, State> {
@@ -27,10 +31,21 @@ class Service extends React.Component<Props, State> {
     showEmailSignin: false,
     isSubmitting: false,
     email: "",
+    ldapId: "",
+    ldapPassword: "",
+    showLdapSignin: false,
   };
 
   handleChangeEmail = (event: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({ email: event.target.value });
+  };
+
+  handleChangeLdap = (event: SyntheticInputEvent<HTMLInputElement>) => {
+    this.setState({ ldapId: event.target.value });
+  };
+
+  handleChangePwdForLdap = (event: SyntheticInputEvent<HTMLInputElement>) => {
+    this.setState({ ldapPassword: event.target.value });
   };
 
   handleSubmitEmail = async (event: SyntheticEvent<HTMLFormElement>) => {
@@ -53,6 +68,33 @@ class Service extends React.Component<Props, State> {
       }
     } else {
       this.setState({ showEmailSignin: true });
+    }
+  };
+
+  handleSubmitLdap = async (event: SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (this.state.showLdapSignin && this.state.ldapId) {
+      this.setState({ isSubmitting: true });
+
+      try {
+        // console.log("action:", event.currentTarget.action);
+        const response = await client.post(event.currentTarget.action, {
+          username: this.state.ldapId,
+          password: this.state.ldapPassword,
+        });
+        if (response.redirect) {
+          window.location.href = response.redirect;
+        } else {
+          console.log("login success for ldap");
+          this.props.onLdapSuccess(this.state.ldapId);
+        }
+      } finally {
+        console.log("submit failure");
+        this.setState({ isSubmitting: false });
+      }
+    } else {
+      this.setState({ showLdapSignin: true });
     }
   };
 
@@ -95,6 +137,60 @@ class Service extends React.Component<Props, State> {
             )}
           </Form>
         </Wrapper>
+      );
+    }
+    if (id === "ldap") {
+      if (isCreate) {
+        return null;
+      }
+
+      console.log("id:", id);
+      console.log("name:", name);
+      console.log("authUrl:", authUrl);
+      console.log("ldap type");
+      return (
+          <Wrapper key="ldap">
+            <Form
+                method="POST"
+                action="/auth/ldap"
+                onSubmit={this.handleSubmitLdap}
+            >
+              {this.state.showLdapSignin ? (
+                  <>
+                    <InputLarge
+                        type="text"
+                        name="ldap"
+                        placeholder="Please enter ldapID"
+                        value={this.state.ldapId}
+                        onChange={this.handleChangeLdap}
+                        disabled={this.state.isSubmitting}
+                        autoFocus
+                        required
+                        short
+                    />
+
+                    <InputLarge
+                        type="password"
+                        name="password"
+                        placeholder="Please enter password"
+                        value={this.state.ldapPassword}
+                        onChange={this.handleChangePwdForLdap}
+                        disabled={this.state.isSubmitting}
+                        autoFocus
+                        required
+                        short
+                    />
+                    <ButtonLarge type="submit" disabled={this.state.isSubmitting}>
+                      Sign In →
+                    </ButtonLarge>
+                  </>
+              ) : (
+                  <ButtonLarge type="submit" icon={<EmailIcon />} fullwidth>
+                    Continue with LDAP
+                  </ButtonLarge>
+              )}
+            </Form>
+          </Wrapper>
       );
     }
 
