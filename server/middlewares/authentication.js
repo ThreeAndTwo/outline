@@ -139,6 +139,7 @@ export default function auth(options?: { required?: boolean } = {}) {
         domain,
       });
       const teamUrl = process.env.TEAM_REDIRECT_URL;
+      console.log("teamUrlaaaaaaaaa:", teamUrl);
 
       // set a transfer cookie for the access token itself and redirect
       // to the teams subdomain if subdomains are enabled

@@ -27,7 +27,6 @@ router.post("ldap", async (ctx) => {
     const team = await Team.findByPk(process.env.TEAM_ID);
 
     const teamUrl = process.env.TEAM_REDIRECT_URL;
-    // team.url = process.env.TEAM_REDIRECT_URL;
 
     // ps: ctx.redirect 并不发生实质性的跳转
     let authInfo = [];
