@@ -22,13 +22,13 @@ if (process.env.GOOGLE_CLIENT_ID) {
     });
 }
 
-// if (process.env.SLACK_KEY) {
-//     services.push({
-//         id: "slack",
-//         name: "Slack",
-//         authUrl: signin("slack"),
-//     });
-// }
+if (process.env.SLACK_KEY) {
+    services.push({
+        id: "slack",
+        name: "Slack",
+        authUrl: signin("slack"),
+    });
+}
 
 // services.push({
 //     id: "ldap",
