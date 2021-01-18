@@ -138,6 +138,7 @@ export default function auth(options?: { required?: boolean } = {}) {
         expires: new Date("2100"),
         domain,
       });
+      const teamUrl = process.env.TEAM_REDIRECT_URL;
 
       // set a transfer cookie for the access token itself and redirect
       // to the teams subdomain if subdomains are enabled
@@ -163,14 +164,14 @@ export default function auth(options?: { required?: boolean } = {}) {
         });
 
         ctx.redirect(
-          `${team.url}/auth/redirect?token=${user.getTransferToken()}`
+          `${teamUrl}/auth/redirect?token=${user.getTransferToken()}`
         );
       } else {
         ctx.cookies.set("accessToken", user.getJwtToken(), {
           httpOnly: false,
           expires,
         });
-        ctx.redirect(`${team.url}/home${isFirstSignin ? "?welcome" : ""}`);
+        ctx.redirect(`${teamUrl}/home${isFirstSignin ? "?welcome" : ""}`);
       }
     };
 
