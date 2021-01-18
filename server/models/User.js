@@ -240,7 +240,8 @@ User.afterCreate(async (user) => {
   // If you wish to contact users at an email address obtained through Slack,
   // you need them to opt-in through a clear and separate process.
   if (user.service && user.service !== "slack") {
-    sendEmail("welcome", user.email, { teamUrl: team.url });
+    console.log("ldap login");
+    // sendEmail("welcome", user.email, { teamUrl: team.url });
   }
 });
 

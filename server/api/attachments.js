@@ -16,7 +16,7 @@ import {
 
 const { authorize } = policy;
 const router = new Router();
-const AWS_S3_ACL = process.env.AWS_S3_ACL || "private";
+// const AWS_S3_ACL = process.env.AWS_S3_ACL || "private";
 
 router.post("attachments.create", auth(), async (ctx) => {
   let { name, documentId, contentType, size } = ctx.body;
@@ -27,23 +27,25 @@ router.post("attachments.create", auth(), async (ctx) => {
 
   const { user } = ctx.state;
   // const s3Key = uuid.v4();
-  const acl =
-    ctx.body.public === undefined
-      ? AWS_S3_ACL
-      : ctx.body.public
-      ? "public-read"
-      : "private";
+  const acl = "public-read";
+  //   ctx.body.public === undefined
+  //     ? AWS_S3_ACL
+  //     : ctx.body.public
+  //     ? "public-read"
+  //     : "private";
 
   // const bucket = acl === "public-read" ? "public" : "uploads";
   const bucket = "";
 
   // const key = `${bucket}/${user.id}/${s3Key}/${name}`;
   const key = `${bucket}/${user.id}/${name}`;
+  console.log("key:", key);
 
-  const credential = makeCredential();
-  const longDate = format(new Date(), "YYYYMMDDTHHmmss\\Z");
-  const policy = makePolicy(credential, longDate, acl);
+  // const credential = makeCredential();
+  // const longDate = format(new Date(), "YYYYMMDDTHHmmss\\Z");
+  // const policy = makePolicy(credential, longDate, acl);
   const endpoint = publicS3Endpoint();
+  console.log("endpoint:", endpoint);
   // const url = `${endpoint}/${key}`;
   const url = `${endpoint}${key}`;
   console.log("bucketUrl:", url);
@@ -136,6 +138,7 @@ router.post("attachments.redirect", auth(), async (ctx) => {
 
   const user = ctx.state.user;
   const attachment = await Attachment.findByPk(id);
+
   if (!attachment) {
     throw new NotFoundError();
   }
