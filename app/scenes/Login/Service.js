@@ -109,7 +109,7 @@ class Service extends React.Component<Props, State> {
       return (
         <Wrapper key="email">
           <Form
-            method="POST"
+              method="POST"
             action="/auth/email"
             onSubmit={this.handleSubmitEmail}
           >
@@ -234,7 +234,7 @@ const Wrapper = styled.div`
 
 const Form = styled.form`
   width: 100%;
-  display: flex;
+  display: block;
   justify-content: space-between;
 `;
 
