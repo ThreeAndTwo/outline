@@ -119,7 +119,7 @@ router.get("ldap.callback", auth({required: false}), async (ctx) => {
                 lastActiveIp: ctx.request.ip,
                 lastSignedInAt: new Date(),
                 lastSignedInIp: ctx.request.ip,
-                teamId: "db26c69a-2983-41f9-94ac-33a0785c2e0e",
+                teamId: process.env.TEAM_ID,
                 avatarUrl: "https://wiki.eschain.tech/images/icons/profilepics/default.svg",
                 service: "ldap",
                 language: "zh_CN",
