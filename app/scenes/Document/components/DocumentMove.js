@@ -91,6 +91,9 @@ class DocumentMove extends React.Component<Props> {
   };
 
   handleFilter = (ev: SyntheticInputEvent<*>) => {
+    console.log("ev:", ev);
+    console.log("target.value:", ev.target.value);
+    console.log("searchTerm:", this.searchTerm);
     this.searchTerm = ev.target.value;
   };
 

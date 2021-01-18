@@ -21,7 +21,8 @@ export const uploadFile = async (
   file: File | Blob,
   options?: Options = { name: "" }
 ) => {
-  const name = file instanceof File ? file.name : options.name;
+  // const name = file instanceof File ? file.name : options.name;
+  const name = Date.now();
   const response = await client.post("/attachments.create", {
     public: options.public,
     documentId: options.documentId,
