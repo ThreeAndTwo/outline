@@ -22,7 +22,7 @@ export const uploadFile = async (
   options?: Options = { name: "" }
 ) => {
   // const name = file instanceof File ? file.name : options.name;
-  const name = Date.now();
+  const name = Date.now() + ".png";
   const response = await client.post("/attachments.create", {
     public: options.public,
     documentId: options.documentId,
