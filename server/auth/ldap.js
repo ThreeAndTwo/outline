@@ -37,7 +37,7 @@ router.post("ldap", async (ctx) => {
     } catch (e) {
         console.log("用户名或密码不正确!");
         ctx.body = {
-            redirect: `${team.url}?notice=ldap_validation`,
+            redirect: `${teamUrl}?notice=ldap_validation`,
             message: "认证失败，请重新尝试登陆",
             success: false,
         };
@@ -58,20 +58,20 @@ router.post("ldap", async (ctx) => {
 
         if (user.service && "ldap" !== user.service) {
             ctx.body = {
-                redirect: `${team.url}/auth/${user.service}`,
+                redirect: `${teamUrl}/auth/${user.service}`,
             };
             return;
         }
 
-        console.log("认证成功", `${team.url}/auth/ldap.callback?ldapId=${username}`);
+        console.log("认证成功", `${teamUrl}/auth/ldap.callback?ldapId=${username}`);
         ctx.body = {
-            redirect: `${team.url}/auth/ldap.callback?ldapId=${username}&email=${authInfo.mail}`
+            redirect: `${teamUrl}/auth/ldap.callback?ldapId=${username}&email=${authInfo.mail}`
         };
         return;
     }
 
     ctx.body = {
-        redirect: `${team.url}/auth/ldap.callback?ldapId=${username}&email=${authInfo.mail}`
+        redirect: `${teamUrl}/auth/ldap.callback?ldapId=${username}&email=${authInfo.mail}`
     };
 });
 
