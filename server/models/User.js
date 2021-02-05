@@ -24,6 +24,7 @@ const User = sequelize.define(
     email: { type: DataTypes.STRING },
     username: { type: DataTypes.STRING },
     name: DataTypes.STRING,
+    password: { type: DataTypes.STRING },
     avatarUrl: { type: DataTypes.STRING, allowNull: true },
     isAdmin: DataTypes.BOOLEAN,
     service: { type: DataTypes.STRING, allowNull: true },

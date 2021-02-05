@@ -30,28 +30,33 @@ if (process.env.GOOGLE_CLIENT_ID) {
 //     });
 // }
 
-// services.push({
-//     id: "ldap",
-//     name: "LDAP",
-//     authUrl: "",
-// });
-
 services.push({
-        id: "ldap",
-        name: "LDAP",
-        authUrl: "",
-    },
-    // {
-    //     id: "email",
-    //     name: "Email",
-    //     authUrl: "",
-    // }
-);
+    id: "invitation",
+    name: "Invitation",
+    authUrl: "",
+});
+
+// services.push({
+//         id: "ldap",
+//         name: "LDAP",
+//         authUrl: "",
+//     },
+//     // {
+//     //     id: "email",
+//     //     name: "Email",
+//     //     authUrl: "",
+//     // }
+// );
 
 function filterServices(team) {
     let output = services;
 
+    // 邀请制
     if (team) {
+        output = reject(output, (service) => service.id === "invitation");
+    }
+
+    if (team && !team.ldapId) {
         output = reject(output, (service) => service.id === "ldap");
     }
     if (team && !team.googleId) {

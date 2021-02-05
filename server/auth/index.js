@@ -13,6 +13,7 @@ import email from "./email";
 import google from "./google";
 import slack from "./slack";
 import ldap from "./ldap";
+import invitation from "./invitation";
 
 const app = new Koa();
 app.use(Cors());
@@ -22,6 +23,7 @@ router.use("/", slack.routes());
 router.use("/", google.routes());
 router.use("/", email.routes());
 router.use("/", ldap.routes());
+router.use("/", invitation.routes());
 
 router.get("/redirect", auth(), async (ctx) => {
   const user = ctx.state.user;

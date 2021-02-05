@@ -15,6 +15,7 @@ type Props = {
   isCreate: boolean,
   onEmailSuccess: (email: string) => void,
   onLdapSuccess: (username: string) => void,
+  onInvSuccess: (username: string) => void,
 };
 
 type State = {
@@ -24,6 +25,10 @@ type State = {
   ldapId: string,
   ldapPassword: string,
   showLdapSignin: boolean,
+  accountId: string,
+  accountPwd: string,
+  invCode: string,
+  showInvSignin: boolean,
 };
 
 class Service extends React.Component<Props, State> {
@@ -34,6 +39,10 @@ class Service extends React.Component<Props, State> {
     ldapId: "",
     ldapPassword: "",
     showLdapSignin: false,
+    accountId: "",
+    accountPwd: "",
+    invCode: "",
+    showInvSignin: false,
   };
 
   handleChangeEmail = (event: SyntheticInputEvent<HTMLInputElement>) => {
@@ -46,6 +55,18 @@ class Service extends React.Component<Props, State> {
 
   handleChangePwdForLdap = (event: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({ ldapPassword: event.target.value });
+  };
+
+  handleChangeAccountId = (event: SyntheticInputEvent<HTMLInputElement>) => {
+    this.setState({accountId : event.target.value });
+  };
+
+  handleChangePwdForAccount = (event: SyntheticInputEvent<HTMLInputElement>) => {
+    this.setState({ accountPwd: event.target.value });
+  };
+
+  handleChangeCodeForAccount = (event: SyntheticInputEvent<HTMLInputElement>) => {
+    this.setState({ invCode: event.target.value });
   };
 
   handleSubmitEmail = async (event: SyntheticEvent<HTMLFormElement>) => {
@@ -95,6 +116,34 @@ class Service extends React.Component<Props, State> {
       }
     } else {
       this.setState({ showLdapSignin: true });
+    }
+  };
+
+  handleSubmitInvitation = async (event: SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (this.state.showInvSignin && this.state.accountId) {
+      this.setState({ isSubmitting: true });
+
+      try {
+        // console.log("action:", event.currentTarget.action);
+        const response = await client.post(event.currentTarget.action, {
+          username: this.state.accountId,
+          password: this.state.accountPwd,
+          invCode: this.state.invCode,
+        });
+        if (response.redirect) {
+          window.location.href = response.redirect;
+        } else {
+          console.log("login success for invitation");
+          this.props.onInvSuccess(this.state.accountId);
+        }
+      } finally {
+        console.log("submit failure");
+        this.setState({ isSubmitting: false });
+      }
+    } else {
+      this.setState({ showInvSignin: true });
     }
   };
 
@@ -187,6 +236,72 @@ class Service extends React.Component<Props, State> {
               ) : (
                   <ButtonLarge type="submit" icon={<EmailIcon />} fullwidth>
                     Continue with LDAP
+                  </ButtonLarge>
+              )}
+            </Form>
+          </Wrapper>
+      );
+    }
+
+    if (id === "invitation") {
+      if (isCreate) {
+        return null;
+      }
+
+      console.log("id:", id);
+      console.log("name:", name);
+      console.log("authUrl:", authUrl);
+      console.log("invitation type");
+      return (
+          <Wrapper key="invitation">
+            <Form
+                method="POST"
+                action="/auth/invitation"
+                onSubmit={this.handleSubmitInvitation}
+            >
+              {this.state.showInvSignin ? (
+                  <>
+                    <InputLarge
+                        type="text"
+                        name="accountId"
+                        placeholder="Please enter Account ID"
+                        value={this.state.accountId}
+                        onChange={this.handleChangeAccountId}
+                        disabled={this.state.isSubmitting}
+                        autoFocus
+                        required
+                        short
+                    />
+
+                    <InputLarge
+                        type="password"
+                        name="password"
+                        placeholder="Please enter password"
+                        value={this.state.accountPwd}
+                        onChange={this.handleChangePwdForAccount}
+                        disabled={this.state.isSubmitting}
+                        autoFocus
+                        required
+                        short
+                    />
+                    <InputLarge
+                        type="text"
+                        name="invCode"
+                        placeholder="Please enter invitation code"
+                        value={this.state.invCode}
+                        onChange={this.handleChangeCodeForAccount}
+                        disabled={this.state.isSubmitting}
+                        autoFocus
+                        required
+                        short
+                    />
+                    <ButtonLarge type="submit" disabled={this.state.isSubmitting}>
+                      Sign In →
+                    </ButtonLarge>
+                  </>
+              ) : (
+                  <ButtonLarge type="submit" icon={<EmailIcon />} fullwidth>
+                    Continue with Invitation
                   </ButtonLarge>
               )}
             </Form>

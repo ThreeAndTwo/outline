@@ -48,7 +48,7 @@ export const uploadFile = async (
     formData.append("file", file);
   }
 
-  let bucketDir = "wiki" + data.form.key;
+  let bucketDir = "finance-wiki" + data.form.key;
   console.log("bucketDir: ", bucketDir);
 
   try {
